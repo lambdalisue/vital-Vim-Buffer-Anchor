@@ -1,0 +1,51 @@
+*vital-vim-buffer-anchor.txt*		Find suitable anchor buffer
+
+Version: 0.1.0
+Author:  Alisue <lambdalisue@hashnote.net>	*Vital.Vim.Buffer.Anchor-author*
+Support: Vim 7.3 and above
+License: MIT license  {{{
+	Copyright (c) 2014 Alisue, hashnote.net
+
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files
+	(the "Software"), to deal in the Software without restriction,
+	including without limitation the rights to use, copy, modify, merge,
+	publish, distribute, sublicense, and/or sell copies of the Software,
+	and to permit persons to whom the Software is furnished to do so,
+	subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+	CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+
+==============================================================================
+CONTENTS				*Vital.Vim.Buffer.Anchor-contents*
+
+Introductions			|Vital.Vim.Buffer.Anchor-introductions|
+Usage				|Vital.Vim.Buffer.Anchor-usage|
+Functions			|Vital.Vim.Buffer.Anchor-functions|
+
+==============================================================================
+INTRODUCTIONS				*Vital.Vim.Buffer.Anchor-introductions*
+
+
+==============================================================================
+USAGE					*Vital.Vim.Buffer.Anchor-usage*
+
+
+==============================================================================
+FUNCTIONS				*Vital.Vim.Buffer.Anchor-functions*
+
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl

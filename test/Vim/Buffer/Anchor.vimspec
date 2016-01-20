@@ -1,0 +1,225 @@
+let s:V = vital#of('vital')
+let s:Buffer = s:V.import('Vim.Buffer')
+
+Describe Vim.Buffer.Anchor
+  Before
+    call s:Buffer.wipeout_all()
+    let Anchor = s:V.import('Vim.Buffer.Anchor')
+    let DEFAULT_CONFIG = {
+          \ 'buflisted_required': 1,
+          \ 'unsuitable_buftype_pattern': '^\%(nofile\|quickfix\)$',
+          \ 'unsuitable_bufname_pattern': '',
+          \ 'unsuitable_filetype_pattern': '',
+          \}
+  End
+  After
+    call Anchor.set_config(DEFAULT_CONFIG)
+  End
+
+  Describe .get_config()
+    It should return a copy of a config dictionary
+      let config = Anchor.get_config()
+      Assert IsDict(config)
+      Assert KeyExists(config, 'buflisted_required')
+      Assert KeyExists(config, 'unsuitable_buftype_pattern')
+      Assert KeyExists(config, 'unsuitable_bufname_pattern')
+      Assert KeyExists(config, 'unsuitable_filetype_pattern')
+      Assert Equal(config, DEFAULT_CONFIG)
+
+      let config2 = Anchor.get_config()
+      Assert Equal(config, config2)
+      Assert NotSame(config, config2)
+    End
+  End
+
+  Describe .set_config({config})
+    It should overwrite existing config with {config}
+      call Anchor.set_config({
+            \ 'buflisted_required': 0,
+            \ 'unsuitable_buftype_pattern': 'foo',
+            \ 'unsuitable_bufname_pattern': 'foo',
+            \ 'unsuitable_filetype_pattern': 'foo',
+            \})
+      let config = Anchor.get_config()
+      Assert Equal(config, {
+            \ 'buflisted_required': 0,
+            \ 'unsuitable_buftype_pattern': 'foo',
+            \ 'unsuitable_bufname_pattern': 'foo',
+            \ 'unsuitable_filetype_pattern': 'foo',
+            \})
+    End
+    It should ignore unknown attributes
+      call Anchor.set_config({
+            \ 'buflisted_required': 0,
+            \ 'unsuitable_buftype_pattern': 'foo',
+            \ 'unsuitable_bufname_pattern': 'foo',
+            \ 'unsuitable_filetype_pattern': 'foo',
+            \ 'unknown_attribute': 'bar',
+            \})
+      let config = Anchor.get_config()
+      Assert Equal(config, {
+            \ 'buflisted_required': 0,
+            \ 'unsuitable_buftype_pattern': 'foo',
+            \ 'unsuitable_bufname_pattern': 'foo',
+            \ 'unsuitable_filetype_pattern': 'foo',
+            \})
+    End
+    It should ignore missing attributes
+      call Anchor.set_config({
+            \ 'unsuitable_bufname_pattern': 'foo',
+            \ 'unsuitable_filetype_pattern': 'foo',
+            \ 'unknown_attribute': 'bar',
+            \})
+      let config = Anchor.get_config()
+      Assert Equal(config, extend(copy(DEFAULT_CONFIG), {
+            \ 'unsuitable_bufname_pattern': 'foo',
+            \ 'unsuitable_filetype_pattern': 'foo',
+            \}))
+    End
+  End
+
+  Describe .is_suitable({winnr})
+    Context with buflisted_required
+      Before
+        call Anchor.set_config({
+              \ 'buflisted_required': 1,
+              \ 'unsuitable_buftype_pattern': '',
+              \ 'unsuitable_bufname_pattern': '',
+              \ 'unsuitable_filetype_pattern': '',
+              \})
+      End
+      It should return 0 for a buffer which is not listed in buflist
+        file foobar | setlocal nobuflisted
+        Assert False(Anchor.is_suitable(0))
+      End
+      It should return 1 for a buffer which is listed in buflist
+        file foobar | setlocal buflisted
+        Assert True(Anchor.is_suitable(0))
+      End
+    End
+
+    Context with unsuitable_buftype_pattern
+      Before
+        call Anchor.set_config({
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': '^nofile$',
+              \ 'unsuitable_bufname_pattern': '',
+              \ 'unsuitable_filetype_pattern': '',
+              \})
+      End
+      It should return 0 for a buffer which buftype follow unsuitable pattern
+        file foobar | setlocal buftype=nofile
+        Assert False(Anchor.is_suitable(0))
+      End
+      It should return 1 for a buffer which buftype does not follow unsuitable pattern
+        file foobar | setlocal buftype=nowrite
+        Assert True(Anchor.is_suitable(0))
+      End
+    End
+
+    Context with unsuitable_bufname_pattern
+      Before
+        call Anchor.set_config({
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': '',
+              \ 'unsuitable_bufname_pattern': '^invalid$',
+              \ 'unsuitable_filetype_pattern': '',
+              \})
+      End
+      It should return 0 for a buffer which bufname follow unsuitable pattern
+        file invalid
+        Assert False(Anchor.is_suitable(0))
+      End
+      It should return 1 for a buffer which bufname does not follow unsuitable pattern
+        file foobar
+        Assert True(Anchor.is_suitable(0))
+      End
+    End
+
+    Context with unsuitable_filetype_pattern
+      Before
+        call Anchor.set_config({
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': '',
+              \ 'unsuitable_bufname_pattern': '',
+              \ 'unsuitable_filetype_pattern': '^invalid$',
+              \})
+      End
+      It should return 0 for a buffer which filetype follow unsuitable pattern
+        file foobar | setlocal filetype=invalid
+        Assert False(Anchor.is_suitable(0))
+      End
+      It should return 1 for a buffer which filetype does not follow unsuitable pattern
+        file foobar | setlocal filetype=valid
+        Assert True(Anchor.is_suitable(0))
+      End
+    End
+  End
+
+  Describe .find_suitable([{winnr}])
+    It should return a winnum of the next suitable window from the specified window
+      " NOTE: the current window (suitable) will be 1
+      file suitable1 | setlocal buflisted
+      rightbelow new unsuitable2 | setlocal nobuflisted
+      rightbelow new unsuitable3 | setlocal buflisted buftype=nofile
+      rightbelow new suitable4   | setlocal buflisted
+      rightbelow new unsuitable5 | setlocal nobuflisted
+
+      let ret = [
+            \ Anchor.find_suitable(1),
+            \ Anchor.find_suitable(2),
+            \ Anchor.find_suitable(3),
+            \ Anchor.find_suitable(4),
+            \ Anchor.find_suitable(5),
+            \]
+      Assert Equals(ret, [1, 4, 4, 4, 1])
+    End
+
+    It should return 0 if there is no suitable window
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new unsuitable2 | setlocal nobuflisted
+      rightbelow new unsuitable3 | setlocal nobuflisted
+      rightbelow new unsuitable4 | setlocal nobuflisted
+      rightbelow new unsuitable5 | setlocal nobuflisted
+
+      let ret = [
+            \ Anchor.find_suitable(1),
+            \ Anchor.find_suitable(2),
+            \ Anchor.find_suitable(3),
+            \ Anchor.find_suitable(4),
+            \ Anchor.find_suitable(5),
+            \]
+      Assert Equals(ret, [0, 0, 0, 0, 0])
+    End
+  End
+
+  Describe .focus()
+    It should focus a next suitable window
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new suitable2   | setlocal buflisted buftype=nowrite
+      rightbelow new suitable3   | setlocal buflisted buftype=acwrite
+      rightbelow new unsuitable4 | setlocal buflisted buftype=nofile
+      rightbelow new unsuitable5 | setlocal nobuflisted buftype=nofile
+
+      " Note:
+      "   focus is in 'unsuitable5' now, thus the next suitable
+      "   window is 'suitable2'
+      call Anchor.focus()
+      Assert Equals(bufname('%'), 'suitable2')
+    End
+
+    It should focus a previous window if there is no suitable window found
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new unsuitable2 | setlocal buflisted buftype=nofile
+      rightbelow new unsuitable3 | setlocal buflisted buftype=nofile
+      rightbelow new unsuitable4 | setlocal nobuflisted buftype=nofile
+      rightbelow new unsuitable5 | setlocal nobuflisted buftype=nofile
+
+      " Note:
+      "   focus is in 'unsuitable5' now, thus the previous
+      "   window is 'unsuitable4'
+      call Anchor.focus()
+      Assert Equals(bufname('%'), 'unsuitable4')
+    End
+  End
+End
