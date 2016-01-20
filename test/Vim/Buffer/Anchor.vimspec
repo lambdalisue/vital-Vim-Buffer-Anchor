@@ -3,7 +3,7 @@ let s:Buffer = s:V.import('Vim.Buffer')
 
 Describe Vim.Buffer.Anchor
   Before
-    call s:Buffer.wipeout_all()
+    windo bwipeout!
     let Anchor = s:V.import('Vim.Buffer.Anchor')
     let DEFAULT_CONFIG = {
           \ 'buflisted_required': 1,
