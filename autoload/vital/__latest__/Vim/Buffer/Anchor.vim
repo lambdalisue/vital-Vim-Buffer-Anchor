@@ -121,10 +121,6 @@ function! s:_on_WinEnter() abort
     endif
     unlet g:_vital_vim_buffer_anchor_winleave
   endif
-  " remove autocmd
-  augroup vital_vim_buffer_anchor_internal
-    autocmd! *
-  augroup END
 endfunction
 
 let &cpo = s:save_cpo
