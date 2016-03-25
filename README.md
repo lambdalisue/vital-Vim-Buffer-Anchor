@@ -6,6 +6,44 @@ vital-Vim-Buffer-Anchor
 Introductions
 -------------------------------------------------------------------------------
 
+This module is used to find/focus a suitable anchor buffer which is used for
+opening a new buffer from a non-file buffer such as |quickfix| window.
+
+Use this module to focus an anchor buffer prior to open a new buffer.
+The following code is an example simple file manager.
+
+```vim
+let s:V = gita#vital()
+let s:BufferAnchor = s:V.import('Vim.Buffer.Anchor')
+
+function! s:open_file(opener) abort
+  let filename = expand(getline('.'))
+  if s:BufferAnchor.is_available(a:opener)
+    " this is not called when 'opener' is pedit or tabedit
+    call s:BufferAnchor.focus()
+  endif
+  execute a:opener . ' ' . fnameescape(filename)
+endfunction
+
+function! s:open_file_manager(root) abort
+  topleft 50 vsplit FileManager
+  let candidates = split(glob(a:root . '/*'), "\r\\?\n")
+  let candidates = filter(candidates, 'filereadable(v:val)')
+  let candidates = map(candidates, 'fnamemodify(v:val, '':~:.'')')
+  let candidates = ['File Manager'] + candidates
+  call setline(1, candidates)
+  nnoremap <buffer> e :<C-u>call <SID>open_file('ed')<CR>
+  nnoremap <buffer> s :<C-u>call <SID>open_file('sp')<CR>
+  nnoremap <buffer> v :<C-u>call <SID>open_file('vs')<CR>
+  nnoremap <buffer> p :<C-u>call <SID>open_file('ped')<CR>
+  nnoremap <buffer> t :<C-u>call <SID>open_file('tabe')<CR>
+  " Attach an anchoring feature
+  call s:Anchor.attach()
+endfunction
+
+command! FileManager call s:open_file_manager(getcwd())
+```
+
 Install
 -------------------------------------------------------------------------------
 
@@ -18,10 +56,6 @@ And call the following to bundle this plugin
 ```vim
 :Vitalize . +Vim.Buffer.Anchor
 ```
-
-Usage
--------------------------------------------------------------------------------
-
 
 License
 -------------------------------------------------------------------------------
