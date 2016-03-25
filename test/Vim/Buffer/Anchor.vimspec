@@ -466,7 +466,6 @@ Describe Vim.Buffer.Anchor
       rightbelow new unsuitable3 | setlocal buflisted buftype=nofile
       rightbelow new suitable4   | setlocal buflisted
       rightbelow new unsuitable5 | setlocal nobuflisted
-
       let ret = [
             \ Anchor.find_suitable(1),
             \ Anchor.find_suitable(2),
@@ -475,6 +474,21 @@ Describe Vim.Buffer.Anchor
             \ Anchor.find_suitable(5),
             \]
       Assert Equals(ret, [1, 4, 4, 4, 1])
+
+      windo bwipeout!
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new suitable2   | setlocal buflisted
+      rightbelow new unsuitable3 | setlocal buflisted buftype=nofile
+      rightbelow new suitable4   | setlocal buflisted
+      rightbelow new unsuitable5 | setlocal nobuflisted
+      let ret = [
+            \ Anchor.find_suitable(1),
+            \ Anchor.find_suitable(2),
+            \ Anchor.find_suitable(3),
+            \ Anchor.find_suitable(4),
+            \ Anchor.find_suitable(5),
+            \]
+      Assert Equals(ret, [2, 2, 4, 4, 2])
     End
 
     It returns a winnum of the previous suitable window from the specified window when {reverse} is specified
@@ -493,6 +507,21 @@ Describe Vim.Buffer.Anchor
             \ Anchor.find_suitable(5, 1),
             \]
       Assert Equals(ret, [1, 1, 1, 4, 4])
+
+      windo bwipeout!
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new suitable2   | setlocal buflisted
+      rightbelow new unsuitable3 | setlocal buflisted buftype=nofile
+      rightbelow new suitable4   | setlocal buflisted
+      rightbelow new unsuitable5 | setlocal nobuflisted
+      let ret = [
+            \ Anchor.find_suitable(1, 4),
+            \ Anchor.find_suitable(2, 4),
+            \ Anchor.find_suitable(3, 4),
+            \ Anchor.find_suitable(4, 4),
+            \ Anchor.find_suitable(5, 4),
+            \]
+      Assert Equals(ret, [4, 2, 2, 4, 4])
     End
 
     It returns 0 if there is no suitable window
