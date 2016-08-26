@@ -24,7 +24,7 @@ addons:
       - liblua5.2-dev
 
 install:
-  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then wget -O - https://git.io/v6N6q | bash
+  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then (wget -O - https://git.io/v6N6q | bash)
   - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then export PATH=$HOME/vim/bin:$PATH; fi
   - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
   - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install lua; fi
