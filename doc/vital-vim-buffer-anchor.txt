@@ -11,6 +11,7 @@ CONTENTS				*Vital.Vim.Buffer.Anchor-contents*
 INTRODUCTIONS			|Vital.Vim.Buffer.Anchor-introductions|
 USAGE				|Vital.Vim.Buffer.Anchor-usage|
 FUNCTIONS			|Vital.Vim.Buffer.Anchor-functions|
+CHANGELOG			|Vital.Vim.Buffer.Anchor-changelog|
 
 
 ==============================================================================
