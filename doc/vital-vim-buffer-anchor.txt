@@ -66,15 +66,12 @@ These behaviors are configurable by |Vital.Vim.Buffer.Anchor.set_config()|.
 
 The following code is an example simple file manager.
 >
-    let s:V = gita#vital()
-    let s:BufferAnchor = s:V.import('Vim.Buffer.Anchor')
+    let s:BufferAnchor = vital#vital#import('Vim.Buffer.Anchor')
 
     function! s:open_file(opener) abort
       let filename = expand(getline('.'))
-      if s:BufferAnchor.is_available(a:opener)
-        " this is not called when 'opener' is pedit or tabedit
-        call s:BufferAnchor.focus()
-      endif
+      " Note: focus() is not called when 'opener' is pedit or tabedit
+      call s:BufferAnchor.focus_if_available(a:opener)
       execute a:opener . ' ' . fnameescape(filename)
     endfunction
 
@@ -139,12 +136,8 @@ is_available({opener})
 	Return if anchoring is required or not for {opener}.
 	For example, anchoring prior to 'pedit' or 'tabedit' may not required
 	and this method return 0 for such {opener}.
-	It is recommended to enclose focus() method by this method like:
->
-	if s:BufferAnchor.is_available(opener)
-	  call s:BufferAnchor.focus()
-	endif
-<
+	See also |Vital.Vim.Buffer.Anchor.focus_if_available()|.
+
 				*Vital.Vim.Buffer.Anchor.is_suitable()*
 is_suitable({winnum})
 
@@ -169,6 +162,21 @@ focus([{reverse}])
 	by winnr('#').
 	If {reverse} is specified, it try to focus a previous suitable window
 	instead.
+	See also |Vital.Vim.Buffer.Anchor.focus_if_available()|.
+
+				*Vital.Vim.Buffer.Anchor.focus_if_available()*
+focus_if_available({opener}[, {reverse}])
+
+	Focus a next suitable window with |keepjumps| when {openre} is an
+	available opener such as 'edit'.
+	This method is equivalent to the code below:
+>
+	if s:Anchor.is_available(opener)
+	  call s:Anchor.focus(reverse)
+	endif
+<
+	Using this method instead of using |Vital.Vim.Buffer.Anchor.focus()|
+	directly is recommended.
 
 				*Vital.Vim.Buffer.Anchor.attach()*
 attach()

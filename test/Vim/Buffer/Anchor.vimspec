@@ -1,5 +1,6 @@
 Describe Vim.Buffer.Anchor
   Before
+    let Guard = vital#vital#import('Vim.Guard')
     let Anchor = vital#vital#import('Vim.Buffer.Anchor')
     let config_saved = Anchor.get_config()
   End
@@ -575,6 +576,30 @@ Describe Vim.Buffer.Anchor
       "   window is 'unsuitable4'
       call Anchor.focus()
       Assert Equals(bufname('%'), 'unsuitable4')
+    End
+  End
+
+  Describe .focus_if_available({opener}[, {reverse}])
+    It should focus a next suitable window when {opener} is an available opener
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new suitable2   | setlocal buflisted buftype=nowrite
+      rightbelow new suitable3   | setlocal buflisted buftype=acwrite
+      rightbelow new unsuitable4 | setlocal buflisted buftype=nofile
+      rightbelow new unsuitable5 | setlocal nobuflisted buftype=nofile
+      " Note:
+      "   focus is in 'unsuitable5' now, thus the next suitable
+      "   window is 'suitable2'
+      call Anchor.focus_if_available('edit')
+      Assert Equals(bufname('%'), 'suitable2')
+    End
+
+    It should NOT focus a next suitable window when {opener} is NOT an available opener
+      file unsuitable1 | setlocal nobuflisted
+      rightbelow new suitable2   | setlocal buflisted buftype=nowrite
+      rightbelow new suitable3   | setlocal buflisted buftype=acwrite
+      rightbelow new unsuitable4 | setlocal buflisted buftype=nofile
+      rightbelow new unsuitable5 | setlocal nobuflisted buftype=nofile
+      Assert Equals(bufname('%'), 'unsuitable5')
     End
   End
 

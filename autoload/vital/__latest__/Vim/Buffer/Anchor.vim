@@ -100,6 +100,12 @@ function! s:focus(...) abort
   silent execute printf('keepjumps %dwincmd w', suitable_winnum)
 endfunction
 
+function! s:focus_if_available(opener, ...) abort
+  if s:is_available(a:opener)
+    call call('s:focus', a:000)
+  endif
+endfunction
+
 function! s:attach() abort
   augroup vital_vim_buffer_anchor_internal
     autocmd! *
