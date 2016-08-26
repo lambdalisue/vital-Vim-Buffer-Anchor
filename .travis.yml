@@ -22,13 +22,8 @@ addons:
       - libluajit-5.1-dev
 
 install:
-  - |
-    if [ x"$HEAD" = "xyes" ]; then
-      wget -O - https://git.io/v6N6q | bash
-      export PATH=$HOME/vim/bin:$PATH
-    fi
-
-before_script:
+  - wget -O - https://git.io/v6N6q | bash
+  - if [ x"$HEAD" = "xyes" ]; then export PATH=$HOME/vim/bin:$PATH; fi
   - git clone -q --depth 1 --single-branch https://github.com/syngan/vim-vimlint    /tmp/vim-vimlint
   - git clone -q --depth 1 --single-branch https://github.com/ynkdir/vim-vimlparser /tmp/vim-vimlparser
   - git clone -q --depth 1 --single-branch https://github.com/thinca/vim-themis     /tmp/vim-themis
