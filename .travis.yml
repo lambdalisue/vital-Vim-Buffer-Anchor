@@ -22,9 +22,10 @@ addons:
       - libluajit-5.1-dev
 
 install:
-  - if [ x"$HEAD" = "xyes" ]; then
-      wget -O - https://git.io/v6N6q | bash;
-      export PATH=$HOME/vim/bin:$PATH;
+  - |
+    if [ x"$HEAD" = "xyes" ]; then
+      wget -O - https://git.io/v6N6q | bash
+      export PATH=$HOME/vim/bin:$PATH
     fi
 
 before_script:
