@@ -7,21 +7,18 @@ Introductions
 -------------------------------------------------------------------------------
 
 This module is used to find/focus a suitable anchor buffer which is used for
-opening a new buffer from a non-file buffer such as |quickfix| window.
+opening a new buffer from a non-file buffer such as `quickfix` window.
 
 Use this module to focus an anchor buffer prior to open a new buffer.
 The following code is an example simple file manager.
 
 ```vim
-let s:V = gita#vital()
-let s:BufferAnchor = s:V.import('Vim.Buffer.Anchor')
+let s:BufferAnchor = vital#vital#import('Vim.Buffer.Anchor')
 
 function! s:open_file(opener) abort
   let filename = expand(getline('.'))
-  if s:BufferAnchor.is_available(a:opener)
-    " this is not called when 'opener' is pedit or tabedit
-    call s:BufferAnchor.focus()
-  endif
+  " Note: focus() is not called when 'opener' is pedit or tabedit
+  call s:BufferAnchor.focus_if_available(a:opener)
   execute a:opener . ' ' . fnameescape(filename)
 endfunction
 
