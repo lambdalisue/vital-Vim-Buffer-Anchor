@@ -1,20 +1,12 @@
-let s:V = vital#of('vital')
-let s:Buffer = s:V.import('Vim.Buffer')
-
 Describe Vim.Buffer.Anchor
   Before
-    windo bwipeout!
-    let Anchor = s:V.import('Vim.Buffer.Anchor')
-    let DEFAULT_CONFIG = {
-          \ 'buflisted_required': 1,
-          \ 'unsuitable_buftype_pattern': '^\%(nofile\|quickfix\)$',
-          \ 'unsuitable_bufname_pattern': '',
-          \ 'unsuitable_filetype_pattern': '',
-          \}
+    let Anchor = vital#vital#import('Vim.Buffer.Anchor')
+    let config_saved = Anchor.get_config()
   End
 
   After
-    call Anchor.set_config(DEFAULT_CONFIG)
+    call Anchor.set_config(config_saved)
+    windo bwipeout!
   End
 
   Describe .get_config()
@@ -25,7 +17,7 @@ Describe Vim.Buffer.Anchor
       Assert KeyExists(config, 'unsuitable_buftype_pattern')
       Assert KeyExists(config, 'unsuitable_bufname_pattern')
       Assert KeyExists(config, 'unsuitable_filetype_pattern')
-      Assert Equal(config, DEFAULT_CONFIG)
+      Assert Equal(config, config_saved)
 
       let config2 = Anchor.get_config()
       Assert Equal(config, config2)
@@ -74,7 +66,7 @@ Describe Vim.Buffer.Anchor
             \ 'unknown_attribute': 'bar',
             \})
       let config = Anchor.get_config()
-      Assert Equal(config, extend(copy(DEFAULT_CONFIG), {
+      Assert Equal(config, extend(copy(config_saved), {
             \ 'unsuitable_bufname_pattern': 'foo',
             \ 'unsuitable_filetype_pattern': 'foo',
             \}))
