@@ -18,8 +18,6 @@ addons:
       - python3-dev
       - lua5.2
       - liblua5.2-dev
-      - luajit
-      - libluajit-5.1-dev
 
 install:
   - wget -O - https://git.io/v6N6q | bash
