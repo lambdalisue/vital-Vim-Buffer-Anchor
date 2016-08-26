@@ -4,6 +4,10 @@ env:
   - HEAD=no
 sudo: false
 
+os:
+  - linux
+  - osx
+
 addons:
   apt:
     packages:
@@ -20,14 +24,18 @@ addons:
       - liblua5.2-dev
 
 install:
-  - wget -O - https://git.io/v6N6q | bash
-  - if [ x"$HEAD" = "xyes" ]; then export PATH=$HOME/vim/bin:$PATH; fi
+  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then wget -O - https://git.io/v6N6q | bash
+  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then export PATH=$HOME/vim/bin:$PATH; fi
+  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install lua; fi
+  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install vim --with-lua; fi
   - git clone -q --depth 1 --single-branch https://github.com/syngan/vim-vimlint    /tmp/vim-vimlint
   - git clone -q --depth 1 --single-branch https://github.com/ynkdir/vim-vimlparser /tmp/vim-vimlparser
   - git clone -q --depth 1 --single-branch https://github.com/thinca/vim-themis     /tmp/vim-themis
   - git clone -q --depth 1 --single-branch https://github.com/vim-jp/vital.vim      /tmp/vital
 
 script:
+  - uname -a
   - which -a vim
   - vim --version
   - /tmp/vim-themis/bin/themis --reporter dot --runtimepath /tmp/vital
