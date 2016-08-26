@@ -33,15 +33,15 @@ function! s:set_config(config) abort
 endfunction
 
 function! s:is_available(opener) abort
-  if a:opener =~# '\%(^\|\W\)\%(pta\|ptag\)!\?\%(\W\|$\)'
+  if a:opener =~# '\<p\%[tag]!\?\>'
     return 0
-  elseif a:opener =~# '\%(^\|\W\)\%(ped\|pedi\|pedit\)!\?\%(\W\|$\)'
+  elseif a:opener =~# '\<ped\%[it]!\?\>'
     return 0
-  elseif a:opener =~# '\%(^\|\W\)\%(ps\|pse\|psea\|psear\|psearc\|psearch\)!\?\%(\W\|$\)'
+  elseif a:opener =~# '\<ps\%[earch]!\?\>'
     return 0
-  elseif a:opener =~# '\%(^\|\W\)\%(tabe\|tabed\|tabedi\|tabedit\|tabnew\)\%(\W\|$\)'
+  elseif a:opener =~# '\<\%(tabe\%[dit]\|tabnew\)\>'
     return 0
-  elseif a:opener =~# '\%(^\|\W\)\%(tabf\|tabfi\|tabfin\|tabfind\)\%(\W\|$\)'
+  elseif a:opener =~# '\<tabf\%[ind]\>'
     return 0
   endif
   return 1
