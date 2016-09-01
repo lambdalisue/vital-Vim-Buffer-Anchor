@@ -1,6 +1,11 @@
 vital-Vim-Buffer-Anchor
 ==============================================================================
-[![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Buffer-Anchor/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Buffer-Anchor) [![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Buffer-Anchor/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Buffer-Anchor/branch/master) ![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-yellow.svg?style=flat-square) ![Support Vim 7.3 or above](https://img.shields.io/badge/support-Vim%207.3%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) [![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Buffer--Anchor-orange.svg?style=flat-square)](doc/vital-vim-buffer-anchor.txt)
+[![Travis CI](https://img.shields.io/travis/lambdalisue/vital-Vim-Buffer-Anchor/master.svg?style=flat-square&label=Travis%20CI)](https://travis-ci.org/lambdalisue/vital-Vim-Buffer-Anchor)
+[![AppVeyor](https://img.shields.io/appveyor/ci/lambdalisue/vital-Vim-Buffer-Anchor/master.svg?style=flat-square&label=AppVeyor)](https://ci.appveyor.com/project/lambdalisue/vital-Vim-Buffer-Anchor/branch/master)
+![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-yellow.svg?style=flat-square)
+![Support Vim 7.3 or above](https://img.shields.io/badge/support-Vim%207.3%20or%20above-yellowgreen.svg?style=flat-square)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Buffer--Anchor-orange.svg?style=flat-square)](doc/vital-vim-buffer-anchor.txt)
 
 
 Introductions
@@ -13,12 +18,12 @@ Use this module to focus an anchor buffer prior to open a new buffer.
 The following code is an example simple file manager.
 
 ```vim
-let s:BufferAnchor = vital#vital#import('Vim.Buffer.Anchor')
+let s:Anchor = vital#vital#import('Vim.Buffer.Anchor')
 
 function! s:open_file(opener) abort
   let filename = expand(getline('.'))
   " Note: focus() is not called when 'opener' is pedit or tabedit
-  call s:BufferAnchor.focus_if_available(a:opener)
+  call s:Anchor.focus_if_available(a:opener)
   execute a:opener . ' ' . fnameescape(filename)
 endfunction
 
@@ -44,37 +49,10 @@ command! FileManager call s:open_file_manager(getcwd())
 Install
 -------------------------------------------------------------------------------
 
-```vim
-NeoBundle 'lambdalisue/vital-Vim-Buffer-Anchor'
-```
-
-And call the following to bundle this plugin
+Install this repository with your favorite Vim plugin manager and then
 
 ```vim
 :Vitalize . +Vim.Buffer.Anchor
 ```
 
-License
--------------------------------------------------------------------------------
-The MIT License (MIT)
-
-Copyright (c) 2016 Alisue, hashnote.net
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+To activate Vim.Buffer.Anchor on your plugin.

@@ -24,7 +24,7 @@ Use this module to focus an anchor buffer prior to open a new buffer. For
 example, if you are developing a file manager, use following code to open a
 file under the cursor in your file manager buffer.
 >
-    call s:BufferAnchor.focus()
+    call s:Anchor.focus()
     execute 'edit ' . getline('.')
 <
 Then your file manager buffer stays and a new buffer is opened at a window
@@ -49,12 +49,12 @@ These behaviors are configurable by |Vital.Vim.Buffer.Anchor.set_config()|.
 
 The following code is an example simple file manager.
 >
-    let s:BufferAnchor = vital#vital#import('Vim.Buffer.Anchor')
+    let s:Anchor = vital#vital#import('Vim.Buffer.Anchor')
 
     function! s:open_file(opener) abort
       let filename = expand(getline('.'))
       " Note: focus() is not called when 'opener' is pedit or tabedit
-      call s:BufferAnchor.focus_if_available(a:opener)
+      call s:Anchor.focus_if_available(a:opener)
       execute a:opener . ' ' . fnameescape(filename)
     endfunction
 
