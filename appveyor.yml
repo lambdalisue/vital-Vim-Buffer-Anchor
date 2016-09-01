@@ -3,7 +3,6 @@ clone_depth: 1
 environment:
   matrix:
     - VIM_URL: http://vim-jp.org/redirects/koron/vim-kaoriya/latest/win64/
-    - VIM_URL: http://vim-jp.org/redirects/koron/vim-kaoriya/vim73/oldest/win64/
 install:
   - ps: |
       $zip = $Env:APPVEYOR_BUILD_FOLDER + '\vim.zip'
@@ -17,6 +16,8 @@ install:
   - 'reg copy HKLM\SOFTWARE\Python\PythonCore\2.7 HKLM\SOFTWARE\Python\PythonCore\2.7-32 /s /reg:64'
   - 'git clone -q --depth 1 --single-branch https://github.com/vim-jp/vital.vim  %TEMP%\vital'
   - 'git clone -q --depth 1 --single-branch https://github.com/thinca/vim-themis %TEMP%\vim-themis'
+  - 'git config --global user.name "Appveyor"'
+  - 'git config --global user.email appveyor@example.com'
 build: off
 test_script:
   - '%THEMIS_VIM% --version'

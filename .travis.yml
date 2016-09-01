@@ -1,12 +1,13 @@
 language: generic
-env:
-  - HEAD=yes
-  - HEAD=no
 sudo: false
-
+env:
+  - VERSION=HEAD
+  - VERSION=v7.3.429
+  - VERSION=nvim
 os:
   - linux
   - osx
+osx_image: xcode8
 
 addons:
   apt:
@@ -24,20 +25,7 @@ addons:
       - liblua5.2-dev
 
 install:
-  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then (wget -O - https://git.io/v6N6q | bash); fi
-  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then export PATH=$HOME/vim/bin:$PATH; fi
-  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install lua; fi
-  - if [ x"$HEAD" = "xyes" ] && [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install vim --with-lua; fi
-  - git clone -q --depth 1 --single-branch https://github.com/syngan/vim-vimlint    /tmp/vim-vimlint
-  - git clone -q --depth 1 --single-branch https://github.com/ynkdir/vim-vimlparser /tmp/vim-vimlparser
-  - git clone -q --depth 1 --single-branch https://github.com/thinca/vim-themis     /tmp/vim-themis
-  - git clone -q --depth 1 --single-branch https://github.com/vim-jp/vital.vim      /tmp/vital
+  - bash .ci/install.sh
 
 script:
-  - uname -a
-  - which -a vim
-  - vim --version
-  - /tmp/vim-themis/bin/themis --reporter dot --runtimepath /tmp/vital
-  - /tmp/vim-vimlint/bin/vimlint.sh -l /tmp/vim-vimlint -p /tmp/vim-vimlparser -e EVL103=1 -e EVL102.l:_=1 -c func_abort=1 autoload
-  - vim --cmd "try | helptags doc/ | catch | cquit | endtry" --cmd quit
+  - bash .ci/script.sh
