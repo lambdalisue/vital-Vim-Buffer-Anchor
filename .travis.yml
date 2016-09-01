@@ -1,8 +1,8 @@
 language: generic
 sudo: false
 env:
+  - VERSION=SYSTEM
   - VERSION=HEAD
-  - VERSION=v7.3.429
   - VERSION=nvim
 os:
   - linux
