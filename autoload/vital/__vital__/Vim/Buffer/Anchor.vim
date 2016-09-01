@@ -115,16 +115,16 @@ function! s:attach() abort
 endfunction
 
 function! s:_on_WinLeave() abort
-  let g:_vital_vim_buffer_anchor_winleave = winnr('$')
+  let s:_vital_vim_buffer_anchor_winleave = winnr('$')
 endfunction
 
 function! s:_on_WinEnter() abort
-  if exists('g:_vital_vim_buffer_anchor_winleave')
-    let nwin = g:_vital_vim_buffer_anchor_winleave
+  if exists('s:_vital_vim_buffer_anchor_winleave')
+    let nwin = s:_vital_vim_buffer_anchor_winleave
     if winnr('$') < nwin
       call s:focus(1)
     endif
-    unlet g:_vital_vim_buffer_anchor_winleave
+    unlet s:_vital_vim_buffer_anchor_winleave
   endif
 endfunction
 
