@@ -1,6 +1,6 @@
 *vital-vim-buffer-anchor.txt*		Find a suitable anchor buffer
 
-Version: 1.0.0
+Version: 1.0.1
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
 Support: Vim 7.3 and above
@@ -170,6 +170,9 @@ attach()
 
 ==============================================================================
 CHANGELOG				*Vital.Vim.Buffer.Anchor-changelog*
+
+1.0.1	2016-09-01
+	- Use a script-local variable instead of a global variable
 
 1.0.0	2016-08-26
 	- Initial stable version
