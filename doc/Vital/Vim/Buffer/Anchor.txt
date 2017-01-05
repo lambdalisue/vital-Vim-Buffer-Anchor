@@ -1,9 +1,11 @@
-*vital-vim-buffer-anchor.txt*		Find a suitable anchor buffer
+*Vital/Vim/Buffer/Anchor.txt*		Find a suitable anchor buffer
 
-Version: 1.0.1
+Version: 1.0.2
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
-Support: Vim 7.3 and above
+Support: Vim 7.3.429 and above
+Support: Neovim 0.1.7 and above
+
 
 ==============================================================================
 CONTENTS				*Vital.Vim.Buffer.Anchor-contents*
@@ -171,6 +173,9 @@ attach()
 ==============================================================================
 CHANGELOG				*Vital.Vim.Buffer.Anchor-changelog*
 
+1.0.2	2017-01-05
+	- Refactoring the code
+	- Improve documents
 1.0.1	2016-09-01
 	- Use a script-local variable instead of a global variable
 
