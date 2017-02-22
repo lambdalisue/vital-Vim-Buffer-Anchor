@@ -7,7 +7,7 @@ os:
   - osx
 env:
   - VIM=vim  VIM_VERSION=HEAD
-  - VIM=vim  VIM_VERSION=v7.3.429
+  - VIM=vim  VIM_VERSION=v7.4.001
   - VIM=nvim VIM_VERSION=HEAD   THEMIS_ARGS="-e -s --headless"
   - VIM=nvim VIM_VERSION=v0.1.7 THEMIS_ARGS="-e -s --headless"
 

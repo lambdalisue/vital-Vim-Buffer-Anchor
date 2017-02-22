@@ -3,7 +3,6 @@ set cpo&vim
 
 function! s:_vital_loaded(V) abort
   let s:Dict = a:V.import('Data.Dict')
-  let s:Compat = a:V.import('Vim.Compat')
   let s:config = {
         \ 'disallow_preview': 0,
         \ 'buflisted_required': 1,
@@ -14,10 +13,7 @@ function! s:_vital_loaded(V) abort
 endfunction
 
 function! s:_vital_depends() abort
-  return [
-        \ 'Data.Dict',
-        \ 'Vim.Compat',
-        \]
+  return ['Data.Dict']
 endfunction
 
 function! s:get_config() abort
@@ -61,10 +57,10 @@ function! s:is_suitable(winnum) abort
         \ && bufname(bufnum) =~# s:config.unsuitable_bufname_pattern
     return 0
   elseif !empty(s:config.unsuitable_buftype_pattern)
-        \ && s:Compat.getbufvar(bufnum, '&buftype') =~# s:config.unsuitable_buftype_pattern
+        \ && getbufvar(bufnum, '&buftype') =~# s:config.unsuitable_buftype_pattern
     return 0
   elseif !empty(s:config.unsuitable_filetype_pattern)
-        \ && s:Compat.getbufvar(bufnum, '&filetype') =~# s:config.unsuitable_filetype_pattern
+        \ && getbufvar(bufnum, '&filetype') =~# s:config.unsuitable_filetype_pattern
     return 0
   endif
   return 1
