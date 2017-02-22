@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" An unique identifier for autocmd definition
+let s:UNIQUE = sha256(expand('<sfile>:p'))
+
 function! s:_vital_loaded(V) abort
   let s:Dict = a:V.import('Data.Dict')
   let s:config = {
@@ -111,10 +114,10 @@ function! s:focus_if_available(opener, ...) abort
 endfunction
 
 function! s:attach() abort
-  augroup vital_vim_buffer_anchor_attach_internal
-    autocmd! * <buffer>
-    autocmd WinLeave <buffer> call s:_on_WinLeave()
-  augroup END
+  execute 'augroup vital_vim_buffer_anchor_attach_internal' s:UNIQUE
+  execute 'autocmd! * <buffer>'
+  execute 'autocmd WinLeave <buffer> call s:_on_WinLeave()'
+  execute 'augroup END'
 endfunction
 
 function! s:_on_WinLeave() abort
@@ -131,11 +134,10 @@ function! s:_on_WinEnter() abort
   endif
 endfunction
 
-
-augroup vital_vim_buffer_anchor_internal
-  autocmd! *
-  autocmd WinEnter * call s:_on_WinEnter()
-augroup END
+execute 'augroup vital_vim_buffer_anchor_internal' s:UNIQUE
+execute 'autocmd! *'
+execute 'autocmd WinEnter * call s:_on_WinEnter()'
+execute 'augroup END'
 
 let &cpo = s:save_cpo
 unlet! s:save_cpo
