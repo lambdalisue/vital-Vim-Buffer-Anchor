@@ -86,6 +86,11 @@ get_config()
 
 	Return a config |Dictionary|. The following attributes are available:
 
+	'disallow_preview'
+	|Vital.Vim.Buffer.Anchor.is_suitable()| return 0 for a 'previewwindow'
+	if this option is 1.
+	Default: 0
+
 	'buflisted_required'
 	|Vital.Vim.Buffer.Anchor.is_suitable()| return 0 for non listed buffer
 	if this option is 1.

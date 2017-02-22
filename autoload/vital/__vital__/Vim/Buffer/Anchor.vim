@@ -5,6 +5,7 @@ function! s:_vital_loaded(V) abort
   let s:Dict = a:V.import('Data.Dict')
   let s:Compat = a:V.import('Vim.Compat')
   let s:config = {
+        \ 'disallow_preview': 0,
         \ 'buflisted_required': 1,
         \ 'unsuitable_buftype_pattern': '^\%(nofile\|quickfix\)$',
         \ 'unsuitable_bufname_pattern': '',
@@ -25,6 +26,7 @@ endfunction
 
 function! s:set_config(config) abort
   let s:config = extend(s:config, s:Dict.pick(a:config, [
+        \ 'disallow_preview',
         \ 'buflisted_required',
         \ 'unsuitable_buftype_pattern',
         \ 'unsuitable_bufname_pattern',
@@ -51,6 +53,8 @@ function! s:is_suitable(winnum) abort
   let bufnum  = winbufnr(a:winnum)
   if empty(bufname(bufnum))
     return 1
+  elseif s:config.disallow_preview && &previewwindow
+    return 0
   elseif s:config.buflisted_required && !buflisted(bufnum)
     return 0
   elseif !empty(s:config.unsuitable_bufname_pattern)

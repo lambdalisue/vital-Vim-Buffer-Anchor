@@ -29,6 +29,7 @@ Describe Vim.Buffer.Anchor
   Describe .set_config({config})
     It should overwrite existing config with {config}
       call Anchor.set_config({
+            \ 'disallow_preview': 0,
             \ 'buflisted_required': 0,
             \ 'unsuitable_buftype_pattern': 'foo',
             \ 'unsuitable_bufname_pattern': 'foo',
@@ -36,6 +37,7 @@ Describe Vim.Buffer.Anchor
             \})
       let config = Anchor.get_config()
       Assert Equal(config, {
+            \ 'disallow_preview': 0,
             \ 'buflisted_required': 0,
             \ 'unsuitable_buftype_pattern': 'foo',
             \ 'unsuitable_bufname_pattern': 'foo',
@@ -45,6 +47,7 @@ Describe Vim.Buffer.Anchor
 
     It should ignore unknown attributes
       call Anchor.set_config({
+            \ 'disallow_preview': 0,
             \ 'buflisted_required': 0,
             \ 'unsuitable_buftype_pattern': 'foo',
             \ 'unsuitable_bufname_pattern': 'foo',
@@ -53,6 +56,7 @@ Describe Vim.Buffer.Anchor
             \})
       let config = Anchor.get_config()
       Assert Equal(config, {
+            \ 'disallow_preview': 0,
             \ 'buflisted_required': 0,
             \ 'unsuitable_buftype_pattern': 'foo',
             \ 'unsuitable_bufname_pattern': 'foo',
@@ -348,6 +352,28 @@ Describe Vim.Buffer.Anchor
     It returns 1 for no named buffer (a new buffer)
       0file | setlocal nobuflisted
       Assert True(Anchor.is_suitable(0))
+    End
+
+    Context with disallow_preview
+      Before
+        call Anchor.set_config({
+              \ 'disallow_preview': 1,
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': '',
+              \ 'unsuitable_bufname_pattern': '',
+              \ 'unsuitable_filetype_pattern': '',
+              \})
+      End
+
+      It should return 0 for a buffer which is in previewwindow
+        pedit foobar | wincmd P
+        Assert False(Anchor.is_suitable(0))
+      End
+
+      It should return 1 for a buffer which is not in previewwindow
+        pedit foobar | wincmd P | new foobar
+        Assert True(Anchor.is_suitable(0))
+      End
     End
 
     Context with buflisted_required
