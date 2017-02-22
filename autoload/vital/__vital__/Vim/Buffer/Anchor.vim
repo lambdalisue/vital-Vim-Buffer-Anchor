@@ -111,10 +111,9 @@ function! s:focus_if_available(opener, ...) abort
 endfunction
 
 function! s:attach() abort
-  augroup vital_vim_buffer_anchor_internal
-    autocmd! *
+  augroup vital_vim_buffer_anchor_attach_internal
+    autocmd! * <buffer>
     autocmd WinLeave <buffer> call s:_on_WinLeave()
-    autocmd WinEnter * call s:_on_WinEnter()
   augroup END
 endfunction
 
@@ -131,6 +130,12 @@ function! s:_on_WinEnter() abort
     unlet s:_vital_vim_buffer_anchor_winleave
   endif
 endfunction
+
+
+augroup vital_vim_buffer_anchor_internal
+  autocmd! *
+  autocmd WinEnter * call s:_on_WinEnter()
+augroup END
 
 let &cpo = s:save_cpo
 unlet! s:save_cpo
