@@ -6,7 +6,7 @@ vital-Vim-Buffer-Anchor
 ![Support Vim 7.4.001 or above](https://img.shields.io/badge/support-Vim%207.4.001%20or%20above-yellowgreen.svg?style=flat-square)
 ![Support Neovim 0.1.7 or above](https://img.shields.io/badge/support-Neovim%200.1.7%20or%20above-yellowgreen.svg?style=flat-square)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
-[![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Buffer--Anchor-orange.svg?style=flat-square)](doc/vital-vim-buffer-anchor.txt)
+[![Doc](https://img.shields.io/badge/doc-%3Ah%20vital--Vim--Buffer--Anchor-orange.svg?style=flat-square)](doc/vital/Vim/Buffer/Anchor.txt)
 
 
 Introductions
