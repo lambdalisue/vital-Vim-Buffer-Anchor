@@ -1,81 +1,17 @@
 Describe Vim.Buffer.Anchor
-  Before
+  Before all
     let Guard = vital#vital#import('Vim.Guard')
     let Anchor = vital#vital#import('Vim.Buffer.Anchor')
+  End
+
+  Before
+    let guard = Guard.store([Anchor])
     let config_saved = Anchor.get_config()
   End
 
   After
-    call Anchor.set_config(config_saved)
-    windo bwipeout!
-  End
-
-  Describe .get_config()
-    It should return a copy of a config dictionary
-      let config = Anchor.get_config()
-      Assert IsDict(config)
-      Assert KeyExists(config, 'buflisted_required')
-      Assert KeyExists(config, 'unsuitable_buftype_pattern')
-      Assert KeyExists(config, 'unsuitable_bufname_pattern')
-      Assert KeyExists(config, 'unsuitable_filetype_pattern')
-      Assert Equal(config, config_saved)
-
-      let config2 = Anchor.get_config()
-      Assert Equal(config, config2)
-      Assert NotSame(config, config2)
-    End
-  End
-
-  Describe .set_config({config})
-    It should overwrite existing config with {config}
-      call Anchor.set_config({
-            \ 'disallow_preview': 0,
-            \ 'buflisted_required': 0,
-            \ 'unsuitable_buftype_pattern': 'foo',
-            \ 'unsuitable_bufname_pattern': 'foo',
-            \ 'unsuitable_filetype_pattern': 'foo',
-            \})
-      let config = Anchor.get_config()
-      Assert Equal(config, {
-            \ 'disallow_preview': 0,
-            \ 'buflisted_required': 0,
-            \ 'unsuitable_buftype_pattern': 'foo',
-            \ 'unsuitable_bufname_pattern': 'foo',
-            \ 'unsuitable_filetype_pattern': 'foo',
-            \})
-    End
-
-    It should ignore unknown attributes
-      call Anchor.set_config({
-            \ 'disallow_preview': 0,
-            \ 'buflisted_required': 0,
-            \ 'unsuitable_buftype_pattern': 'foo',
-            \ 'unsuitable_bufname_pattern': 'foo',
-            \ 'unsuitable_filetype_pattern': 'foo',
-            \ 'unknown_attribute': 'bar',
-            \})
-      let config = Anchor.get_config()
-      Assert Equal(config, {
-            \ 'disallow_preview': 0,
-            \ 'buflisted_required': 0,
-            \ 'unsuitable_buftype_pattern': 'foo',
-            \ 'unsuitable_bufname_pattern': 'foo',
-            \ 'unsuitable_filetype_pattern': 'foo',
-            \})
-    End
-
-    It should ignore missing attributes
-      call Anchor.set_config({
-            \ 'unsuitable_bufname_pattern': 'foo',
-            \ 'unsuitable_filetype_pattern': 'foo',
-            \ 'unknown_attribute': 'bar',
-            \})
-      let config = Anchor.get_config()
-      Assert Equal(config, extend(copy(config_saved), {
-            \ 'unsuitable_bufname_pattern': 'foo',
-            \ 'unsuitable_filetype_pattern': 'foo',
-            \}))
-    End
+    call guard.restore()
+    %bwipeout!
   End
 
   Describe .is_available({opener})
@@ -349,6 +285,14 @@ Describe Vim.Buffer.Anchor
   End
 
   Describe .is_suitable({winnr})
+    Before
+      let Anchor.disallow_preview = 0
+      let Anchor.buflisted_required = 0
+      let Anchor.unsuitable_buftype_pattern = ''
+      let Anchor.unsuitable_bufname_pattern = ''
+      let Anchor.unsuitable_filetype_pattern = ''
+    End
+
     It returns 1 for no named buffer (a new buffer)
       0file | setlocal nobuflisted
       Assert True(Anchor.is_suitable(0))
@@ -356,13 +300,7 @@ Describe Vim.Buffer.Anchor
 
     Context with disallow_preview
       Before
-        call Anchor.set_config({
-              \ 'disallow_preview': 1,
-              \ 'buflisted_required': 0,
-              \ 'unsuitable_buftype_pattern': '',
-              \ 'unsuitable_bufname_pattern': '',
-              \ 'unsuitable_filetype_pattern': '',
-              \})
+        let Anchor.disallow_preview = 1
       End
 
       It should return 0 for a buffer which is in previewwindow
@@ -378,12 +316,7 @@ Describe Vim.Buffer.Anchor
 
     Context with buflisted_required
       Before
-        call Anchor.set_config({
-              \ 'buflisted_required': 1,
-              \ 'unsuitable_buftype_pattern': '',
-              \ 'unsuitable_bufname_pattern': '',
-              \ 'unsuitable_filetype_pattern': '',
-              \})
+        let Anchor.buflisted_required = 1
       End
 
       It should return 0 for a buffer which is not listed in buflist
@@ -399,12 +332,7 @@ Describe Vim.Buffer.Anchor
 
     Context with unsuitable_buftype_pattern
       Before
-        call Anchor.set_config({
-              \ 'buflisted_required': 0,
-              \ 'unsuitable_buftype_pattern': '^nofile$',
-              \ 'unsuitable_bufname_pattern': '',
-              \ 'unsuitable_filetype_pattern': '',
-              \})
+        let Anchor.unsuitable_buftype_pattern = '^nofile$'
       End
 
       It should return 0 for a buffer which buftype follow unsuitable pattern
@@ -431,12 +359,7 @@ Describe Vim.Buffer.Anchor
 
     Context with unsuitable_bufname_pattern
       Before
-        call Anchor.set_config({
-              \ 'buflisted_required': 0,
-              \ 'unsuitable_buftype_pattern': '',
-              \ 'unsuitable_bufname_pattern': '^invalid$',
-              \ 'unsuitable_filetype_pattern': '',
-              \})
+        let Anchor.unsuitable_bufname_pattern = '^invalid$'
       End
 
       It should return 0 for a buffer which bufname follow unsuitable pattern
@@ -452,12 +375,7 @@ Describe Vim.Buffer.Anchor
 
     Context with unsuitable_filetype_pattern
       Before
-        call Anchor.set_config({
-              \ 'buflisted_required': 0,
-              \ 'unsuitable_buftype_pattern': '',
-              \ 'unsuitable_bufname_pattern': '',
-              \ 'unsuitable_filetype_pattern': '^invalid$',
-              \})
+        let Anchor.unsuitable_filetype_pattern = '^invalid$'
       End
 
       It should return 0 for a buffer which filetype follow unsuitable pattern
@@ -653,6 +571,80 @@ Describe Vim.Buffer.Anchor
       close
       Assert Equals(winnr('$'), 4)
       Assert Equals(bufname('%'), 'suitable3')
+    End
+  End
+
+  Context obsolete
+    Before
+      let config_saved = Anchor.get_config()
+    End
+
+    Describe .get_config()
+      It should return a copy of a config dictionary
+        let config = Anchor.get_config()
+        Assert IsDict(config)
+        Assert KeyExists(config, 'buflisted_required')
+        Assert KeyExists(config, 'unsuitable_buftype_pattern')
+        Assert KeyExists(config, 'unsuitable_bufname_pattern')
+        Assert KeyExists(config, 'unsuitable_filetype_pattern')
+        Assert Equal(config, config_saved)
+
+        let config2 = Anchor.get_config()
+        Assert Equal(config, config2)
+        Assert NotSame(config, config2)
+      End
+    End
+
+    Describe .set_config({config})
+      It should overwrite existing config with {config}
+        call Anchor.set_config({
+              \ 'disallow_preview': 0,
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': 'foo',
+              \ 'unsuitable_bufname_pattern': 'foo',
+              \ 'unsuitable_filetype_pattern': 'foo',
+              \})
+        let config = Anchor.get_config()
+        Assert Equal(config, {
+              \ 'disallow_preview': 0,
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': 'foo',
+              \ 'unsuitable_bufname_pattern': 'foo',
+              \ 'unsuitable_filetype_pattern': 'foo',
+              \})
+      End
+
+      It should ignore unknown attributes
+        call Anchor.set_config({
+              \ 'disallow_preview': 0,
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': 'foo',
+              \ 'unsuitable_bufname_pattern': 'foo',
+              \ 'unsuitable_filetype_pattern': 'foo',
+              \ 'unknown_attribute': 'bar',
+              \})
+        let config = Anchor.get_config()
+        Assert Equal(config, {
+              \ 'disallow_preview': 0,
+              \ 'buflisted_required': 0,
+              \ 'unsuitable_buftype_pattern': 'foo',
+              \ 'unsuitable_bufname_pattern': 'foo',
+              \ 'unsuitable_filetype_pattern': 'foo',
+              \})
+      End
+
+      It should ignore missing attributes
+        call Anchor.set_config({
+              \ 'unsuitable_bufname_pattern': 'foo',
+              \ 'unsuitable_filetype_pattern': 'foo',
+              \ 'unknown_attribute': 'bar',
+              \})
+        let config = Anchor.get_config()
+        Assert Equal(config, extend(copy(config_saved), {
+              \ 'unsuitable_bufname_pattern': 'foo',
+              \ 'unsuitable_filetype_pattern': 'foo',
+              \}))
+      End
     End
   End
 End
