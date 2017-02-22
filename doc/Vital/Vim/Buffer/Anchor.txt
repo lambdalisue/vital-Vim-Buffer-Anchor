@@ -1,6 +1,6 @@
 *Vital/Vim/Buffer/Anchor.txt*		Find a suitable anchor buffer
 
-Version: 1.0.2
+Version: 2.0.0
 Author : Alisue <lambdalisue@hashnote.net>
 License: MIT license
 Support: Vim 7.4.001 and above
